@@ -1,0 +1,12 @@
+CREATE database "express_challenge";
+
+USE "express_challenge";
+
+CREATE TABLE sessions(
+    id INT PRIMARY KEY NOT NULL,
+    session JSON NOT NULL,
+    state TINYINT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
