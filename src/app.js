@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use(express.static(publicPath));
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
-    ttl:20000,
+    ttl:30000,
     cookieName: "milanesa",
     secret:"secreto"
 }));

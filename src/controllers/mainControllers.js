@@ -1,6 +1,6 @@
 module.exports = {
     home: (req, res) => {
-        console.log(req.session)
-        res.send(`Views:  tantoo`)
+        req.session.contador += 1
+        res.send(`Views: ${req.session.contador}`)
     }
 }
