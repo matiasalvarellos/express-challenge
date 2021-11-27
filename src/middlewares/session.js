@@ -4,6 +4,7 @@ const cookieSignature = require("cookie-signature");
 const uid = require("uid-safe");
 
 
+
 module.exports = ( config = {ttl:3600, cookieName:"sessionId", secret:"mysecret"} )=>{
 
     config.ttl = typeof config.ttl === "number" ? config.ttl  : 3600;
@@ -11,8 +12,10 @@ module.exports = ( config = {ttl:3600, cookieName:"sessionId", secret:"mysecret"
     config.secret = typeof config.secret === "string" ? config.secret  : "mysecret";
     
     let middle = async (req, res, next) => {
-        
+        let cookieValue = cookieSignature.sign(config.cookieName , config.secret);
+
         if( !req.cookies[config.cookieName] ){
+
             await Session.update({
                 state: 0
             },{
@@ -20,20 +23,23 @@ module.exports = ( config = {ttl:3600, cookieName:"sessionId", secret:"mysecret"
                     state: 1
                 }
             })
+
             await Session.create({
                 id: uid.sync(18) ,
-                session: { config },
+                session: { config , id:cookieValue},
                 state: 1
             })
         }
 
-        let cookieValue = cookieSignature.sign(config.cookieName , config.secret);
-        res.cookie(config.cookieName, cookieValue, {maxAge: config.ttl});
+        res.cookie(config.cookieName, cookieValue, {maxAge: config.ttl});        
 
+        function save(key, value){
+            req.session[key] = value
+        }
 
         req.session = {};
         req.session.cookie = config;
-        req.session.
+        req.session.save = save
 
         next()
     }
