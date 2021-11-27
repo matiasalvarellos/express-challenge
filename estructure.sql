@@ -1,6 +1,6 @@
-CREATE database "express_challenge";
+CREATE DATABASE express_challenge;
 
-USE "express_challenge";
+USE express_challenge;
 
 CREATE TABLE sessions(
     id INT PRIMARY KEY NOT NULL,

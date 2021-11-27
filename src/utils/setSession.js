@@ -1,22 +1,28 @@
 const {Session} = require("../database/models");
 
-module.exports = async (idCookie)=>{
+module.exports = async (req, config)=>{
 
-    let session = await Session.findOne({
+    let row =  await Session.findOne({
         where:{
-            session: { id: idCookie }
+            state:1
         }
     })
-
+    let views = JSON.parse(row.session).views;
+    
     req.session = {};
+    req.session.cookie = config;
+    req.session.views = Number(views);
 
-    function save(key, value){
-        req.session[key] = value;
+    async function save(reqData){
+        
+        await Session.update({
+            session: reqData
+        },{
+            where: {
+                state:1
+            }
+        })
     }
-
-    req.session.cookie = session.session;
-    req.session.save = save
-
-
+    req.session.save = save;
 
 }
