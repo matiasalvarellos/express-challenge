@@ -7,16 +7,15 @@ module.exports = async (req, config)=>{
             state:1
         }
     })
-    let views = JSON.parse(row.session).views;
     
-    req.session = {};
-    req.session.cookie = config;
-    req.session.views = Number(views);
+    let data = JSON.parse(row.session)
+    
+    req.session = data;
 
-    async function save(reqData){
+    async function save(){
         
         await Session.update({
-            session: reqData
+            session: req.session
         },{
             where: {
                 state:1

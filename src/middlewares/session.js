@@ -5,14 +5,16 @@ const uid = require("uid-safe");
 const setSession = require("../utils/setSession");
 
 
+module.exports = ( config = {} )=>{
 
-module.exports = ( config = {ttl:3600, cookieName:"sessionId", secret:"mysecret"} )=>{
-
-    config.ttl = typeof config.ttl === "number" ? config.ttl  : 3600;
-    config.cookieName = typeof config.cookieName === "string" ? config.cookieName : "sessionId";
-    config.secret = typeof config.secret === "string" ? config.secret  : "mysecret";
+    config = {
+        ttl:3600, 
+        cookieName:"sessionId", 
+        secret:"mysecret",
+        ...config,
+    }
     
-    let middle = async (req, res, next) => {
+    return async (req, res, next) => {
         let cookieValue = cookieSignature.sign(config.cookieName , config.secret);
 
         if( !req.cookies[config.cookieName] ){
@@ -40,5 +42,4 @@ module.exports = ( config = {ttl:3600, cookieName:"sessionId", secret:"mysecret"
         next()
     }
 
-    return middle;
 }
